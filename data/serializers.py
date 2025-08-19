@@ -48,7 +48,11 @@ class LessonSerializer(serializers.ModelSerializer):
         queryset=LessonStatus.objects.all(), source='status', write_only=True
     )
     payment_status_id = serializers.PrimaryKeyRelatedField(
-        queryset=PaymentStatus.objects.all(), source='payment_status', write_only=True
+        queryset=PaymentStatus.objects.all(),
+        source='payment_status',
+        write_only=True,
+        required=False,
+        allow_null=True
     )
 
     # Read-only nested serializers for output
@@ -60,6 +64,6 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = [
             'id', 'teacher_id', 'lesson_type_id', 'status_id', 'payment_status_id',
-            'created_at', 'comment', 'lesson_type', 'status', 'payment_status',
+            'created_at', 'comment','pupils_text', 'lesson_type', 'status', 'payment_status',
             'date', 'start_time', 'end_time'
         ]

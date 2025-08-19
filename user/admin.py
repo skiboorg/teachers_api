@@ -30,6 +30,7 @@ class UserAdmin(BaseUserAdmin):
         (None, {'fields': ('email', 'password')}),
         ('Personal info',
          {'fields': (
+             "pupils",
                 "full_name",
                 "phone",
                 "avatar",
@@ -39,6 +40,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User,UserAdmin)
+admin.site.register(Pupil)
 
 
 

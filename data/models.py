@@ -1,6 +1,6 @@
 from django.db import models
 
-from user.models import User
+from user.models import User, Pupil
 
 # Цвета по стандарту PrimeVue
 TAG_COLOR_CHOICES = [
@@ -22,11 +22,14 @@ class NoteStatus(models.Model):
 
 class Note(models.Model):
     text = models.TextField(blank=True, null=True)
+    text1 = models.TextField(blank=True, null=True)
+    text2 = models.TextField(blank=True, null=True)
+    text3 = models.TextField(blank=True, null=True)
     status = models.ForeignKey(NoteStatus, on_delete=models.PROTECT)
+    created_at = models.DateField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f'{self.id}'
-
 
 
 
@@ -56,11 +59,13 @@ class PaymentStatus(models.Model):
 
 class Lesson(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='lessons')
+    pupils = models.ManyToManyField(Pupil, related_name='lessons', verbose_name='Ученики')
     created_at = models.DateTimeField(auto_now_add=True)
     comment = models.TextField(blank=True, null=True)
     lesson_type = models.ForeignKey(LessonType, on_delete=models.PROTECT)
     status = models.ForeignKey(LessonStatus, on_delete=models.PROTECT)
-    payment_status = models.ForeignKey(PaymentStatus, on_delete=models.PROTECT)
+    payment_status = models.ForeignKey(PaymentStatus, on_delete=models.PROTECT, blank=True, null=True)
+    pupils_text = models.TextField(blank=True, null=True)
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()

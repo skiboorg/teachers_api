@@ -19,7 +19,13 @@ logger = logging.getLogger(__name__)
 
 
 
+class PupilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pupil
+        fields = '__all__'
+
 class UserSerializer(serializers.ModelSerializer):
+    pupils = PupilSerializer(many=True, read_only=True)
     class Meta:
         model = User
         fields = [
@@ -28,7 +34,8 @@ class UserSerializer(serializers.ModelSerializer):
             "phone",
             'email',
             'is_staff',
-            'avatar'
+            'avatar',
+            'pupils'
         ]
 
         extra_kwargs = {

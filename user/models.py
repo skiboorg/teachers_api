@@ -37,11 +37,26 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+class Pupil(models.Model):
+    avatar = models.FileField(upload_to='avatars', null=True, blank=True)
+    email = models.CharField('Почта', max_length=255, blank=True, null=True, unique=True)
+    full_name = models.CharField('ФИО', max_length=255, blank=True, null=True)
+    phone = models.CharField('Телефон', max_length=255, blank=True, null=True)
+    comment = models.TextField('Коментарий', blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.full_name}'
+
+    class Meta:
+        verbose_name = 'Ученик'
+        verbose_name_plural = '2. Ученики'
+
 
 class User(AbstractUser):
     username = None
     firstname = None
     lastname = None
+    pupils = models.ManyToManyField(Pupil, blank=True, verbose_name='Ученики')
     avatar = models.FileField(upload_to='avatars', null=True, blank=True)
     email = models.CharField('Почта', max_length=255, blank=True, null=True, unique=True)
     full_name = models.CharField('ФИО', max_length=255, blank=True, null=True)
