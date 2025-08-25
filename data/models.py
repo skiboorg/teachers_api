@@ -62,6 +62,7 @@ class Lesson(models.Model):
     pupils = models.ManyToManyField(Pupil, related_name='lessons', verbose_name='Ученики')
     created_at = models.DateTimeField(auto_now_add=True)
     comment = models.TextField(blank=True, null=True)
+    comment_hidden = models.TextField(blank=True, null=True)
     lesson_type = models.ForeignKey(LessonType, on_delete=models.PROTECT)
     status = models.ForeignKey(LessonStatus, on_delete=models.PROTECT)
     payment_status = models.ForeignKey(PaymentStatus, on_delete=models.PROTECT, blank=True, null=True)
