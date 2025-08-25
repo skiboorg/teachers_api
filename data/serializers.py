@@ -64,6 +64,6 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = [
             'id', 'teacher_id', 'lesson_type_id', 'status_id', 'payment_status_id',
-            'created_at', 'comment','pupils_text', 'lesson_type', 'status', 'payment_status',
+            'created_at','pupils', 'comment','pupils_text', 'lesson_type', 'status', 'payment_status',
             'date', 'start_time', 'end_time'
         ]

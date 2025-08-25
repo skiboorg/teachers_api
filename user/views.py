@@ -20,7 +20,13 @@ class GetUser(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+class GetPupils(generics.ListAPIView):
+    # permission_classes = [IsAuthenticated]
+    serializer_class = PupilSerializer
 
+    def get_queryset(self):
+        qs = Pupil.objects.filter(user=self.request.user)
+        return qs
 
 class ResetPassword(APIView):
     def post(self, request):

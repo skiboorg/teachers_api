@@ -24,6 +24,8 @@ class PupilSerializer(serializers.ModelSerializer):
         model = Pupil
         fields = '__all__'
 
+
+
 class UserSerializer(serializers.ModelSerializer):
     pupils = PupilSerializer(many=True, read_only=True)
     class Meta:
