@@ -36,7 +36,7 @@ class UserAdmin(BaseUserAdmin):
                 "avatar",
          )}
          ),
-        ('Permissions', {'fields': ('is_staff', 'is_superuser', 'groups',)}),)
+        ('Permissions', {'fields': ('is_staff','is_support', 'is_superuser', 'groups',)}),)
 
 
 admin.site.register(User,UserAdmin)

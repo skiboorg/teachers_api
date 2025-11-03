@@ -36,6 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
             "phone",
             'email',
             'is_staff',
+            'is_support',
             'avatar',
             'pupils'
         ]

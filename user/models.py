@@ -62,7 +62,7 @@ class User(AbstractUser):
     full_name = models.CharField('ФИО', max_length=255, blank=True, null=True)
     phone = models.CharField('Телефон', max_length=255, blank=True, null=True)
     comment = models.TextField('Коментарий', blank=True, null=True)
-
+    is_support = models.BooleanField("Саппорт", default=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()

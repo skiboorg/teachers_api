@@ -8,3 +8,4 @@ djoser
 pytils
 django-cleanup
 django-filter
+django-ckeditor-5

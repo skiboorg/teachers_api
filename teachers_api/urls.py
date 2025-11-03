@@ -9,7 +9,8 @@ urlpatterns = [
 
     path('api/data/', include('data.urls')),
     path('api/user/', include('user.urls')),
-
+    path('api/idea/', include('idea.urls')),
+    path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 
     path('auth/', include('djoser.urls.authtoken')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
