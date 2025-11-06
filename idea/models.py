@@ -69,12 +69,12 @@ class ReelsIdea(models.Model):
     """
     Идея для Reels.
     """
-
-    reels_number = models.CharField("Номер Reels", max_length=50)
-    title = models.CharField("Название", max_length=255)
-    plot_description = models.TextField("Описание сюжета")
+    author = models.CharField(max_length=50,blank=True, null=True)
+    reels_number = models.CharField("Номер Reels", max_length=50,blank=True, null=True)
+    title = models.CharField("Название", max_length=255,blank=True, null=True)
+    plot_description = models.TextField("Описание сюжета",blank=True, null=True)
     created_at = models.DateTimeField("Дата и время создания", auto_now_add=True)
-    is_approved = models.BooleanField("Одобрено", default=False)
+    is_approved = models.BooleanField("Одобрено", default=False,blank=True, null=True)
     admin_comment = models.TextField("Комментарий администратора", blank=True, null=True)
 
     class Meta:
@@ -105,9 +105,9 @@ class MasterClassIdea(models.Model):
     Идея для мастер-класса.
     """
 
-    mk_number = models.CharField("Номер МК", max_length=50)
-    title = models.CharField("Название", max_length=255)
-    cover = models.ImageField("Обложка (500x300)", upload_to="mk_covers/")
+    mk_number = models.CharField("Номер МК", max_length=50,blank=True, null=True)
+    title = models.CharField("Название", max_length=255,blank=True, null=True)
+    cover = models.ImageField("Обложка (500x300)", upload_to="mk_covers/",blank=True, null=True)
     description = CKEditor5Field("Описание МК (HTML)", blank=True, null=True)
     created_at = models.DateTimeField("Дата и время создания", auto_now_add=True)
     is_approved = models.BooleanField("Одобрено", default=False)

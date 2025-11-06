@@ -205,7 +205,7 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
         model = ReelsIdea
         fields = [
             'id', 'reels_number', 'title', 'plot_description',
-            'created_at', 'is_approved', 'admin_comment', 'example_links'
+            'created_at', 'is_approved', 'admin_comment', 'example_links','author'
         ]
 
     def create(self, validated_data):
@@ -216,10 +216,11 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
         print("=== CREATE REELS IDEA ===")
         print("Validated data:", validated_data)
         print("Links data:", links_data)
-
+        print(' self.context[request].user', self.context['request'].user.full_name)
         # Создаем основную идею
         idea = ReelsIdea.objects.create(**validated_data)
-
+        idea.author = self.context['request'].user.full_name
+        idea.save()
         # Создаем ссылки
         for link_data in links_data:
             if isinstance(link_data, dict):
