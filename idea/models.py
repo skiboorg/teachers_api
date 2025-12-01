@@ -64,12 +64,22 @@ class TaskNote(models.Model):
     def __str__(self):
         return f"Пометка от {self.author} ({self.created_at.date()})"
 
+class ReelsTag(models.Model):
+    name = models.CharField(max_length=50,blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Тег рилсов"
+        verbose_name_plural = "Теги рилсов"
+
+    def __str__(self):
+        return f"{self.name}"
 
 class ReelsIdea(models.Model):
     """
     Идея для Reels.
     """
     author = models.CharField(max_length=50,blank=True, null=True)
+    tags =  models.ManyToManyField(ReelsTag,blank=True)
     reels_number = models.CharField("Номер Reels", max_length=50,blank=True, null=True)
     title = models.CharField("Название", max_length=255,blank=True, null=True)
     plot_description = models.TextField("Описание сюжета",blank=True, null=True)
@@ -100,11 +110,23 @@ class ReelsExampleLink(models.Model):
         verbose_name_plural = "Ссылки на примеры Reels"
 
 
+class MasterClassTag(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Тег МК"
+        verbose_name_plural = "Теги МК"
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+
 class MasterClassIdea(models.Model):
     """
     Идея для мастер-класса.
     """
-
+    tags = models.ManyToManyField(MasterClassTag, blank=True)
     mk_number = models.CharField("Номер МК", max_length=50,blank=True, null=True)
     title = models.CharField("Название", max_length=255,blank=True, null=True)
     cover = models.ImageField("Обложка (500x300)", upload_to="mk_covers/",blank=True, null=True)

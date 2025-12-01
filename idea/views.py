@@ -1,7 +1,15 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from .models import *
 from .serializers import *
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+
+class ReelsTagListView(generics.ListAPIView):
+    serializer_class = ReelsTagSerializer
+    queryset = ReelsTag.objects.all()
+
+class MKTagListView(generics.ListAPIView):
+    serializer_class = MasterClassTagSerializer
+    queryset = MasterClassTag.objects.all()
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
@@ -100,7 +108,18 @@ class TaskViewSet(viewsets.ModelViewSet):
 class ReelsIdeaViewSet(viewsets.ModelViewSet):
     queryset = ReelsIdea.objects.all()
     serializer_class = ReelsIdeaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tag_name = self.request.query_params.get('tag_id', None)
+
+        if tag_name:
+            # Фильтруем по тегу (регистронезависимо)
+            queryset = queryset.filter(tags__id=tag_name)
+
+        return queryset.distinct()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -135,8 +154,18 @@ class ReelsIdeaViewSet(viewsets.ModelViewSet):
 class MasterClassIdeaViewSet(viewsets.ModelViewSet):
     queryset = MasterClassIdea.objects.all()
     serializer_class = MasterClassIdeaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tag_name = self.request.query_params.get('tag_id', None)
+
+        if tag_name:
+            # Фильтруем по тегу (регистронезависимо)
+            queryset = queryset.filter(tags__id=tag_name)
+
+        return queryset.distinct()
     def get_serializer_context(self):
         import json
         context = super().get_serializer_context()

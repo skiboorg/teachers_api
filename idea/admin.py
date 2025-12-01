@@ -1,9 +1,5 @@
 from django.contrib import admin
-from .models import (
-    Task, TaskAttachment, TaskNote,
-    ReelsIdea, ReelsExampleLink,
-    MasterClassIdea, MasterClassMaterial, MasterClassExampleLink, MasterClassFile, MasterClassDate
-)
+from .models import *
 
 class TaskAttachmentInline(admin.TabularInline):
     model = TaskAttachment
@@ -31,8 +27,8 @@ class ReelsExampleLinkInline(admin.TabularInline):
 @admin.register(ReelsIdea)
 class ReelsIdeaAdmin(admin.ModelAdmin):
     list_display = ("reels_number", "title", "is_approved", "created_at")
-    list_filter = ("is_approved",)
-    search_fields = ("reels_number", "title")
+    list_filter = ("is_approved",'tags',)
+    search_fields = ("reels_number", "title", )
     inlines = [ReelsExampleLinkInline]
 
 
@@ -59,7 +55,7 @@ class MasterClassDateInline(admin.TabularInline):
 @admin.register(MasterClassIdea)
 class MasterClassIdeaAdmin(admin.ModelAdmin):
     list_display = ("mk_number", "title", "is_approved", "created_at")
-    list_filter = ("is_approved",)
+    list_filter = ("is_approved",'tags',)
     search_fields = ("mk_number", "title")
     inlines = [
         MasterClassMaterialInline,
@@ -67,3 +63,12 @@ class MasterClassIdeaAdmin(admin.ModelAdmin):
         MasterClassFileInline,
         MasterClassDateInline,
     ]
+
+
+@admin.register(ReelsTag)
+class ReelsTagAdmin(admin.ModelAdmin):
+    list_display = ("name", )
+
+@admin.register(MasterClassTag)
+class MasterClassTagAdmin(admin.ModelAdmin):
+    list_display = ("name", )

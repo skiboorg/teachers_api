@@ -1,5 +1,20 @@
+import json
+
 from rest_framework import serializers
 from .models import *
+
+
+
+class ReelsTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReelsTag
+        fields = '__all__'
+
+class MasterClassTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MasterClassTag
+        fields = '__all__'
+
 
 class TaskAttachmentSerializer(serializers.ModelSerializer):
     file = serializers.FileField(required=False, allow_null=True)
@@ -200,11 +215,12 @@ class ReelsExampleLinkSerializer(serializers.ModelSerializer):
 
 class ReelsIdeaSerializer(serializers.ModelSerializer):
     example_links = ReelsExampleLinkSerializer(many=True, required=False)
-
+    tags = ReelsTagSerializer(many=True, required=False)
     class Meta:
         model = ReelsIdea
         fields = [
             'id', 'reels_number', 'title', 'plot_description',
+            'tags',
             'created_at', 'is_approved', 'admin_comment', 'example_links','author'
         ]
 
@@ -212,14 +228,18 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
         # Берем данные из контекста
         request_data = self.context.get('request_data', {})
         links_data = request_data.get('example_links', [])
+        tags = request_data.get('tags', [])
 
         print("=== CREATE REELS IDEA ===")
         print("Validated data:", validated_data)
         print("Links data:", links_data)
+        print("tags:", tags)
         print(' self.context[request].user', self.context['request'].user.full_name)
         # Создаем основную идею
         idea = ReelsIdea.objects.create(**validated_data)
         idea.author = self.context['request'].user.full_name
+        if tags:
+            idea.tags.set(json.loads(tags))
         idea.save()
         # Создаем ссылки
         for link_data in links_data:
@@ -238,14 +258,16 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
         # Берем данные из контекста, а не из validated_data
         request_data = self.context.get('request_data', {})
         links_data = request_data.get('example_links', [])
-
-        print("Request data example_links:", links_data)
+        tags = request_data.get('tags', [])
+        print("Request data tags:", tags)
 
         # Обновляем основные поля
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
-
+        instance.tags.clear()
+        if tags:
+            instance.tags.set(json.loads(tags))
         # Обновляем ссылки
         instance.example_links.all().delete()
         for link_data in links_data:
@@ -293,7 +315,7 @@ class MasterClassIdeaSerializer(serializers.ModelSerializer):
     example_links = MasterClassExampleLinkSerializer(many=True, read_only=True)
     files = MasterClassFileSerializer(many=True, read_only=True)
     dates = MasterClassDateSerializer(many=True, read_only=True)
-
+    tags = MasterClassTagSerializer(many=True, required=False)
     class Meta:
         model = MasterClassIdea
         fields = "__all__"
@@ -312,7 +334,10 @@ class MasterClassIdeaSerializer(serializers.ModelSerializer):
 
         # Создаем основную запись
         mk_idea = MasterClassIdea.objects.create(**validated_data)
+        tags = request_data.get('tags', [])
 
+        if tags:
+            mk_idea.tags.set(json.loads(tags))
         # Создаем материалы
         for material_data in materials_data:
             if isinstance(material_data, dict):
@@ -365,6 +390,11 @@ class MasterClassIdeaSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+
+        tags = request_data.get('tags', [])
+        instance.tags.clear()
+        if tags:
+            instance.tags.set(json.loads(tags))
 
         # Обрабатываем материалы
         self._handle_materials(instance, materials_data)
