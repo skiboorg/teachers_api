@@ -73,3 +73,15 @@ class UpdateUser(APIView):
 
         return Response(status=status.HTTP_200_OK)
 
+
+class PupilListAPIView(APIView):
+    def get(self, request):
+        """Получить всех учеников с полной информацией"""
+        pupils = Pupil.objects.prefetch_related(
+            'lessons__lesson_type',
+            'lessons__status',
+            'user_set'
+        ).all()
+
+        serializer = PupilDetailSerializer(pupils, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

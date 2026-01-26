@@ -43,6 +43,7 @@ class Pupil(models.Model):
     full_name = models.CharField('ФИО', max_length=255, blank=True, null=True)
     phone = models.CharField('Телефон', max_length=255, blank=True, null=True)
     comment = models.TextField('Коментарий', blank=True, null=True)
+    tax = models.DecimalField(default=0,decimal_places=2,max_digits=4)
 
     def __str__(self):
         return f'{self.full_name}'

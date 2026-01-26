@@ -10,6 +10,8 @@ from django.db import IntegrityError, transaction
 from django.contrib.auth.tokens import default_token_generator
 
 from rest_framework import exceptions, serializers, status, generics
+
+from data.models import LessonType, LessonStatus, Lesson
 from .models import *
 from djoser.conf import settings
 
@@ -97,3 +99,47 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
 
+class LessonTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonType
+        fields = '__all__'
+
+
+class LessonStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonStatus
+        fields = '__all__'
+
+
+class UserBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name']
+
+
+class LessonBriefSerializer(serializers.ModelSerializer):
+    lesson_type = LessonTypeSerializer(read_only=True)
+    status = LessonStatusSerializer(read_only=True)
+
+    class Meta:
+        model = Lesson
+        fields = [
+            'id', 'date', 'start_time', 'end_time',
+            'lesson_type', 'status', 'comment', 'comment_hidden'
+        ]
+
+
+class PupilDetailSerializer(serializers.ModelSerializer):
+    teachers = serializers.SerializerMethodField()
+    lessons = LessonBriefSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Pupil
+        fields = [
+            'id', 'avatar', 'email', 'full_name', 'phone','tax',
+            'teachers', 'lessons'
+        ]
+
+    def get_teachers(self, obj):
+        teachers = User.objects.filter(pupils=obj)
+        return UserBriefSerializer(teachers, many=True).data

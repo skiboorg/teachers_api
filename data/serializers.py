@@ -36,6 +36,11 @@ class PaymentStatusSerializer(serializers.ModelSerializer):
         model = PaymentStatus
         fields = '__all__'
 
+class PupilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pupil
+        fields = '__all__'
+
 
 class LessonSerializer(serializers.ModelSerializer):
     teacher_id = serializers.PrimaryKeyRelatedField(
@@ -54,16 +59,22 @@ class LessonSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
+    pupil_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Pupil.objects.all(),  # или User.objects.all(), в зависимости от вашей модели
+        source='pupils',
+        many=True,
+        write_only=True
+    )
 
     # Read-only nested serializers for output
     lesson_type = LessonTypeSerializer(read_only=True)
     status = LessonStatusSerializer(read_only=True)
     payment_status = PaymentStatusSerializer(read_only=True)
-
+    pupils = PupilSerializer(many=True, read_only=True)
     class Meta:
         model = Lesson
         fields = [
             'id', 'teacher_id', 'lesson_type_id', 'status_id', 'payment_status_id',
             'created_at', 'comment','comment_hidden','pupils_text', 'lesson_type', 'status', 'payment_status',
-            'date', 'start_time', 'end_time'
+            'date', 'start_time', 'end_time','pupils','pupil_ids'
         ]
