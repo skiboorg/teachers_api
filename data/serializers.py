@@ -63,6 +63,8 @@ class LessonSerializer(serializers.ModelSerializer):
         queryset=Pupil.objects.all(),  # или User.objects.all(), в зависимости от вашей модели
         source='pupils',
         many=True,
+        required=False,
+        allow_null=True,
         write_only=True
     )
 
