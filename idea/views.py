@@ -118,10 +118,14 @@ class ReelsIdeaViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         tag_name = self.request.query_params.get('tag_id', None)
+        filter_id = self.request.query_params.get('filter_id', None)
 
         if tag_name:
             # Фильтруем по тегу (регистронезависимо)
             queryset = queryset.filter(tags__id=tag_name)
+        if filter_id:
+            # Фильтруем по тегу (регистронезависимо)
+            queryset = queryset.filter(filters__id=filter_id)
 
         return queryset.distinct()
 
