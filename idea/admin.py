@@ -69,6 +69,10 @@ class MasterClassIdeaAdmin(admin.ModelAdmin):
 class ReelsTagAdmin(admin.ModelAdmin):
     list_display = ("name", )
 
+@admin.register(ReelsFilter)
+class ReelsFilterAdmin(admin.ModelAdmin):
+    list_display = ("name", )
+
 @admin.register(MasterClassTag)
 class MasterClassTagAdmin(admin.ModelAdmin):
     list_display = ("name", )

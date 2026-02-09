@@ -10,6 +10,12 @@ class ReelsTagSerializer(serializers.ModelSerializer):
         model = ReelsTag
         fields = '__all__'
 
+
+class ReelsFilterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReelsFilter
+        fields = '__all__'
+
 class MasterClassTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = MasterClassTag
@@ -213,14 +219,21 @@ class ReelsExampleLinkSerializer(serializers.ModelSerializer):
         model = ReelsExampleLink
         fields = ['id', 'name', 'link']
 
+
+
+
 class ReelsIdeaSerializer(serializers.ModelSerializer):
     example_links = ReelsExampleLinkSerializer(many=True, required=False)
     tags = ReelsTagSerializer(many=True, required=False)
+    filters = ReelsFilterSerializer(many=True, required=False)
     class Meta:
         model = ReelsIdea
         fields = [
             'id', 'reels_number', 'title', 'plot_description',
             'tags',
+            'filters',
+            'is_done',
+            'is_bad',
             'created_at', 'is_approved', 'admin_comment', 'example_links','author'
         ]
 
@@ -229,6 +242,7 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
         request_data = self.context.get('request_data', {})
         links_data = request_data.get('example_links', [])
         tags = request_data.get('tags', [])
+        filters = request_data.get('filters', [])
 
         print("=== CREATE REELS IDEA ===")
         print("Validated data:", validated_data)
@@ -240,6 +254,8 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
         idea.author = self.context['request'].user.full_name
         if tags:
             idea.tags.set(json.loads(tags))
+        if filters:
+            idea.filters.set(json.loads(filters))
         idea.save()
         # Создаем ссылки
         for link_data in links_data:
@@ -257,9 +273,12 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
 
         # Берем данные из контекста, а не из validated_data
         request_data = self.context.get('request_data', {})
+        print("Request data :", request_data)
         links_data = request_data.get('example_links', [])
         tags = request_data.get('tags', [])
+        filters = request_data.get('filters', [])
         print("Request data tags:", tags)
+        print("Request data filters:", filters)
 
         # Обновляем основные поля
         for attr, value in validated_data.items():
@@ -268,6 +287,9 @@ class ReelsIdeaSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         if tags:
             instance.tags.set(json.loads(tags))
+
+        if filters:
+            instance.filters.set(json.loads(filters))
         # Обновляем ссылки
         instance.example_links.all().delete()
         for link_data in links_data:

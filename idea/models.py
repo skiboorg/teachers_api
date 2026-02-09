@@ -74,18 +74,33 @@ class ReelsTag(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class ReelsFilter(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Фильтр Reels"
+        verbose_name_plural = "Фильтры Reels"
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class ReelsIdea(models.Model):
     """
     Идея для Reels.
     """
     author = models.CharField(max_length=50,blank=True, null=True)
     tags =  models.ManyToManyField(ReelsTag,blank=True)
+    filters =  models.ManyToManyField(ReelsFilter,blank=True)
     reels_number = models.CharField("Номер Reels", max_length=50,blank=True, null=True)
     title = models.CharField("Название", max_length=255,blank=True, null=True)
     plot_description = models.TextField("Описание сюжета",blank=True, null=True)
     created_at = models.DateTimeField("Дата и время создания", auto_now_add=True)
     is_approved = models.BooleanField("Одобрено", default=False,blank=True, null=True)
     admin_comment = models.TextField("Комментарий администратора", blank=True, null=True)
+
+    is_done = models.BooleanField("Отснято", default=False, blank=True, null=False)
+    is_bad = models.BooleanField("Забраковано", default=False, blank=True, null=False)
 
     class Meta:
         verbose_name = "Идея для Reels"

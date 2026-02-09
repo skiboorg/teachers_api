@@ -7,6 +7,10 @@ class ReelsTagListView(generics.ListAPIView):
     serializer_class = ReelsTagSerializer
     queryset = ReelsTag.objects.all()
 
+class ReelsFilterListView(generics.ListAPIView):
+    serializer_class = ReelsFilterSerializer
+    queryset = ReelsFilter.objects.all()
+
 class MKTagListView(generics.ListAPIView):
     serializer_class = MasterClassTagSerializer
     queryset = MasterClassTag.objects.all()

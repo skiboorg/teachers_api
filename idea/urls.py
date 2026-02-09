@@ -12,5 +12,6 @@ router.register(r"masterclass-ideas", MasterClassIdeaViewSet)
 
 urlpatterns = [
     path('r_tags', ReelsTagListView.as_view()),
+    path('r_filters', ReelsFilterListView.as_view()),
     path('mk_tags', MKTagListView.as_view()),
 ] + router.urls
